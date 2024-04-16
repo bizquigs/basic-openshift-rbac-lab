@@ -3,5 +3,5 @@ This deploys the ***sample rbac lab application*** from [RedHatDemos OpenShift S
 
 The instructions below will enable you to run the exercise and understand the basics of what is happening.
 
-<u>[Gist containing instructions](https://gist.github.com/bizquigs/06ff9635b4b78753d03d05b98b476804) for running the lab (also available in included Instructions.txt file):</ul>
+<u>[Gist containing instructions](https://gist.github.com/bizquigs/06ff9635b4b78753d03d05b98b476804) for running the lab (also available in included [Instructions.txt](https://github.com/bizquigs/basic-openshift-rbac-lab/blob/main/Instructions.txt) file):</ul>
 
