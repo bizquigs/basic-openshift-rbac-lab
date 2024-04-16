@@ -20,16 +20,16 @@ https://github.com/bizquigs/SecurityDemos/blob/master/2021Labs/OpenShiftSecurity
 Below has condensed instructions for deploying on _your_ cluster.
 
 
-###########################
+
 # Install the rbac-lab app
-# 
+
 ```
 git clone https://github.com/bizquigs/basic-openshift-rbac-lab.git
 cd basic-openshift-rbac-lab
 ```
 
 # log into to your cluster with oc
-#
+
 ```
 oc new-project rbac-lab
 ```
@@ -43,9 +43,8 @@ oc create -f ./service.yaml
 oc create -f ./route.yaml
 ```
 
-#####################################################
 # Orient and see resources & behavior 
-#
+
 Home->Projects->rbac-lab
 Workloads->Pods
 Workloads->Deployments
@@ -58,9 +57,8 @@ Developer view->Topology
 oc get all -n rbac-lab
 ```
 
-######################################################
 # Fix the first error
-#
+
 
 Access the webapp from the route by either going to:
 
@@ -83,59 +81,55 @@ oc create role pod-lister --verb=list --resource=pods
 ```
   oc get role pod-lister -o yaml
 ```
+
+
 # Execute the following command to create a new RoleBinding called pod-listers:
 ```
 oc create rolebinding pod-listers --role=pod-lister --serviceaccount=rbac-lab:default
 ```
+ 
   # view it
 ```
   oc get rolebinding pod-listers -o yaml
 ```
   
-# With the Role and RoleBinding now created in order for the default Service Account to list pods in the rbac-lab namespace, 
-# return to the application in the web browser and refresh the page to confirm that a valid response is now being displayed 
-# for the first query.
+# With the Role and RoleBinding now created in order for the default Service Account to list pods in the rbac-lab namespace, return to the application in the web browser and refresh the page to confirm that a valid response is now being displayed for the first query.
 
 Should see "Number of Pods in Namespace 'rbac-lab': 1
 
 
-###################################################
 # Fix the second error
-#
 
-# Execute the following command to create a new ClusterRole called namespace-lister that grants access 
-# to list all namespaces in the cluster:
+
+# Execute the following command to create a new ClusterRole called namespace-lister that grants access to list all namespaces in the cluster:
 ```
 oc create clusterrole namespace-lister --verb=list --resource=namespace
 ```
+
   # View it
 ```
   oc get clusterrole namespace-lister -o yaml
 ```  
-# Now, create a ClusterRoleBinding to associate the pod-lister ClusterRole to the default Service Account 
-# in the rbac-lab namespace:
+
+
+# Now, create a ClusterRoleBinding to associate the pod-lister ClusterRole to the default Service Account in the rbac-lab namespace:
 ```
 oc create clusterrolebinding namespace-listers --clusterrole=namespace-lister --serviceaccount=rbac-lab:default
 ```
+
   # View it
 ```
   oc get clusterrolebinding namespace-listers -o yaml
 ```
 
-# With the ClusterRole and ClusterRoleBinding created, return once again to the application in the web browser 
-# and refresh the page. The second query should now display a valid response.
-# You should see something like
+# With the ClusterRole and ClusterRoleBinding created, return once again to the application in the web browser and refresh the page. The second query should now display a valid response. You should see something like
 Number of Namespaces: 75
 
 
 
-###################################################
 # Fix the third error
-#
 
-# See main doc for discussion of API groups vs core group.
-# The first two fixes above were for the core group.
-# Now we'll use an API group that deals with users.
+# See main doc for discussion of API groups vs core group. The first two fixes above were for the core group. Now we'll use an API group that deals with users.
 
 # Check access (impersonate)
 ```
@@ -145,15 +139,14 @@ oc auth can-i list users
 oc auth can-i list users --as=system:serviceaccount:rbac-lab:default
 ```
 # Creating Policies for Resources Outside the Core API
-#
+
 # Because Users is cluster-scoped rather than namespace-scoped, we need to make a ClusterRole and a ClusterRoleBinding
 
 ```
 oc api-resources | grep users
 ```
 
-# Now that we know the API Group users are part of, we can create a ClusterRole called 
-# user-lister using the following command:
+# Now that we know the API Group users are part of, we can create a ClusterRole called user-lister using the following command:
 ```
 oc create clusterrole user-lister --verb=list --resource=users.user.openshift.io
 ```
